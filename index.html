@@ -638,6 +638,81 @@
         atualizarMenuAuth();
         renderizarArtigos(artigos);
     </script>
+    <!-- 1. Importando as ferramentas do Firebase que o seu site precisa -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // 2. As suas chaves oficiais da Newstec
+  const firebaseConfig = {
+    apiKey: "AIzaSyDR__hU1fUnvb4mss0i_hv7-aIQBSD3etE",
+    authDomain: "newstec-ca17d.firebaseapp.com",
+    projectId: "newstec-ca17d",
+    storageBucket: "newstec-ca17d.firebasestorage.app",
+    messagingSenderId: "655734827133",
+    appId: "1:655734827133:web:2caa7fcb402ff107f0e914",
+    measurementId: "G-ZWQ7ETZTDG"
+  };
+
+  // 3. Ligando o motor do Firebase no site
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // ======================================================
+  // FUNÇÃO: Enviar o artigo digitado direto para a nuvem
+  // ======================================================
+  function salvarArtigoNaNuvem(titulo, texto, tag) {
+    db.collection("artigos").add({
+      titulo: titulo,
+      texto: texto,
+      tag: tag,
+      dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => {
+      alert("Artigo publicado com sucesso na nuvem do Firebase!");
+      carregarArtigosDaNuvem(); // Atualiza a página para o artigo aparecer
+    })
+    .catch((error) => {
+      console.error("Erro ao salvar artigo: ", error);
+      alert("Ops, deu erro ao salvar!");
+    });
+  }
+
+  // ======================================================
+  // FUNÇÃO: Buscar os artigos da nuvem e mostrar na tela
+  // ======================================================
+  function carregarArtigosDaNuvem() {
+    db.collection("artigos").orderBy("dataCriacao", "desc").get().then((querySnapshot) => {
+      // Procura o lugar no seu HTML onde os artigos ficam guardados
+      const container = document.querySelector('.container-artigos') || document.body; 
+      
+      // Limpa os artigos que o usuário postou antes (para não duplicar na tela)
+      const artigosAntigos = container.querySelectorAll('.artigo-dinamico');
+      artigosAntigos.forEach(artigo => artigo.remove());
+
+      // Passa de artigo em artigo na nuvem e joga pro seu HTML
+      querySnapshot.forEach((doc) => {
+        const dados = doc.data();
+        
+        const artigoHTML = `
+          <article class="card artigo-dinamico">
+            <span class="tag">${dados.tag || 'Tecnologia'}</span>
+            <h2>${dados.titulo}</h2>
+            <p>${dados.texto}</p>
+          </article>
+        `;
+        
+        container.insertAdjacentHTML('beforeend', artigoHTML);
+      });
+    });
+  }
+
+  // Executa a busca automática assim que o seu site terminar de abrir
+  window.onload = function() {
+    carregarArtigosDaNuvem();
+  };
+</script>
+
 </body>
 </html>
 
