@@ -132,6 +132,12 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
         }
 
         .card-img {
@@ -171,6 +177,10 @@
             font-size: 0.95rem;
             margin-bottom: 15px;
             flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .card-author {
@@ -189,6 +199,7 @@
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: bold;
+            align-self: flex-start;
         }
 
         /* Modais (Janelas Flutuantes) */
@@ -211,6 +222,8 @@
             max-width: 500px;
             position: relative;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .close-modal {
@@ -350,9 +363,22 @@
     <main class="container">
         <h3 class="section-title" id="feed-title">Todos os Artigos</h3>
         <div class="grid-tech" id="articles-feed">
-            <!-- Artigos entram aqui dinamicamente -->
+            <!-- Artigos entram aqui dinamicamente vindo do Firebase -->
         </div>
     </main>
+
+    <!-- MODAL DE LEITURA COMPLETA DO ARTIGO -->
+    <div id="modal-read" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close-modal" onclick="closeModal('modal-read')">&times;</span>
+            <img id="view-img" src="" alt="Capa" style="width:100%; height:300px; object-fit:cover; border-radius:8px; margin-bottom:20px; display:none;">
+            <span id="view-category" class="category-tag"></span>
+            <h2 id="view-title" style="margin: 10px 0; color:#0f172a;"></h2>
+            <p id="view-author" class="card-author" style="margin-bottom:20px;"></p>
+            <div id="view-text" style="color:#334155; font-size:1.1rem; white-space:pre-wrap; line-height:1.8; margin-bottom:20px;"></div>
+            <div id="view-pdf-area"></div>
+        </div>
+    </div>
 
     <!-- MODAL DE AUTENTICAÇÃO (LOGIN / SIGN UP) -->
     <div id="modal-auth" class="modal">
@@ -449,42 +475,43 @@
         <p>&copy; 2026 Mundo Tech. Todos os direitos reservados.</p>
     </footer>
 
+    <!-- Importando SDK do Firebase de Compatibilidade -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <script>
-        // Banco de dados simulado no LocalStorage
+        // Configuração Oficial do seu Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDR__hU1fUnvb4mss0i_hv7-aIQBSD3etE",
+            authDomain: "newstec-ca17d.firebaseapp.com",
+            projectId: "newstec-ca17d",
+            storageBucket: "newstec-ca17d.firebasestorage.app",
+            messagingSenderId: "655734827133",
+            appId: "1:655734827133:web:2caa7fcb402ff107f0e914",
+            measurementId: "G-ZWQ7ETZTDG"
+        };
+
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Variáveis Globais de Controle local
         let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-        let artigos = JSON.parse(localStorage.getItem('artigos')) || [
-            {
-                id: 1,
-                titulo: "A Revolução das Novas IAs Generativas",
-                categoria: "Inteligência Artificial",
-                texto: "Descubra como os novos modelos de linguagem estão transformando o mercado de trabalho.",
-                autor: "Sistema",
-                img: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=500&q=80",
-                pdf: null
-            },
-            {
-                id: 2,
-                titulo: "Os Melhores Smartphones do Ano",
-                categoria: "Celulares",
-                texto: "Análise completa das novas câmeras e baterias de altíssima duração.",
-                autor: "Sistema",
-                img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80",
-                pdf: null
-            }
-        ];
         let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
         let imagemCarregadaBase64 = null;
         let pdfCarregadoNome = null;
+        let listaArtigosAtual = []; // Guarda cópia local dos artigos do Firebase para buscas rápidos
 
-        // Controle dos Modais
+        // Modais básicos
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
         function toggleAuthView(showLogin) {
             document.getElementById('auth-login-view').style.display = showLogin ? 'block' : 'none';
             document.getElementById('auth-register-view').style.display = showLogin ? 'none' : 'block';
         }
 
-        // Sistema de Login/Cadastro
+        // Autenticação de Usuários
         function handleRegister(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
@@ -505,7 +532,7 @@
             const pass = document.getElementById('login-pass').value;
 
             const conta = usuarios.find(u => u.user === user && u.pass === pass);
-            if(user === 'admin' && pass === 'admin') { // Conta padrão para testes rapido
+            if(user === 'admin' && pass === 'admin') { 
                 usuarioLogado = { name: "Administrador", user: "admin" };
             } else if (!conta) {
                 return alert('Usuário ou senha incorretos.');
@@ -535,14 +562,14 @@
 
         function verificarLoginParaPublicar() {
             if(!usuarioLogado) {
-                alert('Você precisa estar logado (Sign In) para publicar um artigo!');
+                alert('Você precisa estar logado para publicar um artigo!');
                 openModal('modal-auth');
             } else {
                 openModal('modal-publish');
             }
         }
 
-        // Manipulação de arquivos (Foto e PDF)
+        // Upload local de mídias (Base64 provisório)
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -565,154 +592,159 @@
             document.getElementById('pdf-preview-area').style.display = 'none';
         }
 
-        // Publicar Artigo
+        // ======================================================
+        // SISTEMA REAL DO FIREBASE FIRESTORE
+        // ======================================================
+
+        // SALVAR NO BANCO DE DADOS DA NUVEM
         function handlePublish(e) {
             e.preventDefault();
             const titulo = document.getElementById('pub-title').value;
             const categoria = document.getElementById('pub-category').value;
             const texto = document.getElementById('pub-text').value;
 
-            const novoArtigo = {
-                id: Date.now(),
-                titulo,
-                categoria,
-                texto,
+            const padraoImg = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80";
+
+            // Enviando objeto completo para o Cloud Firestore
+            db.collection("artigos").add({
+                titulo: titulo,
+                categoria: categoria,
+                texto: texto,
                 autor: usuarioLogado.name,
-                img: imagemCarregadaBase64 || "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80",
-                pdf: pdfCarregadoNome ? "#" : null // Simulação de link do PDF
-            };
-
-            artigos.unshift(novoArtigo);
-            localStorage.setItem('artigos', JSON.stringify(artigos));
-            
-            // Resetar formulário
-            document.getElementById('pub-title').value = "";
-            document.getElementById('pub-text').value = "";
-            imagemCarregadaBase64 = null;
-            removePdf();
-
-            closeModal('modal-publish');
-            renderizarArtigos(artigos);
-            alert('Artigo publicado com sucesso!');
+                img: imagemCarregadaBase64 || padraoImg,
+                pdf: pdfCarregadoNome || null,
+                dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert("Artigo publicado com sucesso na nuvem do Firebase!");
+                
+                // Limpar os campos do formulário
+                document.getElementById('pub-title').value = "";
+                document.getElementById('pub-text').value = "";
+                imagemCarregadaBase64 = null;
+                removePdf();
+                closeModal('modal-publish');
+                
+                // Recarregar os dados atualizados
+                carregarArtigosDaNuvem();
+            })
+            .catch((error) => {
+                console.error("Erro ao salvar artigo: ", error);
+                alert("Erro ao salvar o artigo no banco de dados.");
+            });
         }
 
-        // Renderizar Feed na Tela
-        function renderizarArtigos(lista) {
+        // CARREGAR E RENDERIZAR OS ARTIGOS DA NUVEM
+        function carregarArtigosDaNuvem() {
+            db.collection("artigos").orderBy("dataCriacao", "desc").get()
+            .then((querySnapshot) => {
+                listaArtigosAtual = [];
+                const feed = document.getElementById('articles-feed');
+                feed.innerHTML = "";
+
+                if(querySnapshot.empty) {
+                    feed.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#64748b; padding:40px;">Nenhum artigo encontrado na nuvem.</p>`;
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const art = doc.data();
+                    // Guardamos o ID gerado pelo Firebase no objeto
+                    art.id = doc.id; 
+                    listaArtigosAtual.push(art);
+
+                    // Criação visual do card idêntico ao seu layout original
+                    const card = document.createElement('article');
+                    card.className = 'card';
+                    // Evento de clique para poder abrir o artigo de verdade!
+                    card.onclick = () => abrirArtigoCompleto(art.id);
+                    
+                    card.innerHTML = `
+                        <img src="${art.img}" alt="Imagem do Artigo" class="card-img">
+                        <div class="card-content">
+                            <span class="category-tag">${art.categoria || 'Geral'}</span>
+                            <h4 class="card-title">${art.titulo}</h4>
+                            <p class="card-author">Por: ${art.autor || 'Anônimo'}</p>
+                            <p class="card-text">${art.texto}</p>
+                            ${art.pdf ? `<span class="pdf-link">📄 Tem PDF Anexo</span>` : ''}
+                        </div>
+                    `;
+                    feed.appendChild(card);
+                });
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar artigos: ", error);
+            });
+        }
+
+        // FUNÇÃO PARA ABRIR E LER OS ARTIGOS DE VERDADE
+        function abrirArtigoCompleto(id) {
+            const artigo = listaArtigosAtual.find(a => a.id === id);
+            if(!artigo) return;
+
+            document.getElementById('view-title').innerText = artigo.titulo;
+            document.getElementById('view-category').innerText = artigo.categoria || 'Geral';
+            document.getElementById('view-author').innerText = `Por: ${artigo.autor || 'Anônimo'}`;
+            document.getElementById('view-text').innerText = artigo.texto;
+
+            const imgEl = document.getElementById('view-img');
+            if(artigo.img) {
+                imgEl.src = artigo.img;
+                imgEl.style.display = 'block';
+            } else {
+                imgEl.style.display = 'none';
+            }
+
+            const pdfArea = document.getElementById('view-pdf-area');
+            if(artigo.pdf) {
+                pdfArea.innerHTML = `<a href="#" class="pdf-link" onclick="alert('Documento anexado para leitura: ${artigo.pdf}')">📄 Baixar Documento: ${artigo.pdf}</a>`;
+            } else {
+                pdfArea.innerHTML = '';
+            }
+
+            openModal('modal-read');
+        }
+
+        // SISTEMA DE BUSCA FILTRADA (Com dados da nuvem)
+        function filtrarArtigos() {
+            const termo = document.getElementById('search-input').value.toLowerCase();
             const feed = document.getElementById('articles-feed');
             feed.innerHTML = "";
 
-            if(lista.length === 0) {
-                feed.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#64748b; padding:40px;">Nenhum artigo encontrado.</p>`;
+            const filtrados = listaArtigosAtual.filter(art => 
+                art.titulo.toLowerCase().includes(termo) || 
+                art.texto.toLowerCase().includes(termo) ||
+                (art.categoria && art.categoria.toLowerCase().includes(termo))
+            );
+
+            if(filtrados.length === 0) {
+                feed.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#64748b; padding:40px;">Nenhum resultado para a sua pesquisa.</p>`;
                 return;
             }
 
-            lista.forEach(art => {
+            filtrados.forEach(art => {
                 const card = document.createElement('article');
                 card.className = 'card';
+                card.onclick = () => abrirArtigoCompleto(art.id);
                 card.innerHTML = `
                     <img src="${art.img}" alt="Imagem do Artigo" class="card-img">
                     <div class="card-content">
-                        <span class="category-tag">${art.categoria}</span>
+                        <span class="category-tag">${art.categoria || 'Geral'}</span>
                         <h4 class="card-title">${art.titulo}</h4>
-                        <p class="card-author">Por: ${art.autor}</p>
+                        <p class="card-author">Por: ${art.autor || 'Anônimo'}</p>
                         <p class="card-text">${art.texto}</p>
-                        ${art.pdf ? `<a href="#" class="pdf-link" onclick="alert('Este é um PDF demonstrativo anexado: ${art.titulo}')">📄 Baixar PDF</a>` : ''}
+                        ${art.pdf ? `<span class="pdf-link">📄 Tem PDF Anexo</span>` : ''}
                     </div>
                 `;
                 feed.appendChild(card);
             });
         }
 
-        // Sistema de Busca por Filtro
-        function filtrarArtigos() {
-            const termo = document.getElementById('search-input').value.toLowerCase();
-            const filtrados = artigos.filter(art => 
-                art.titulo.toLowerCase().includes(termo) || 
-                art.texto.toLowerCase().includes(termo) ||
-                art.categoria.toLowerCase().includes(termo)
-            );
-            renderizarArtigos(filtrados);
-        }
-
-        // Inicialização automática ao abrir a página
-        atualizarMenuAuth();
-        renderizarArtigos(artigos);
+        // Execuções automáticas ao abrir o site
+        window.onload = function() {
+            atualizarMenuAuth();
+            carregarArtigosDaNuvem();
+        };
     </script>
-    <!-- 1. Importando as ferramentas do Firebase que o seu site precisa -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-<script>
-  // 2. As suas chaves oficiais da Newstec
-  const firebaseConfig = {
-    apiKey: "AIzaSyDR__hU1fUnvb4mss0i_hv7-aIQBSD3etE",
-    authDomain: "newstec-ca17d.firebaseapp.com",
-    projectId: "newstec-ca17d",
-    storageBucket: "newstec-ca17d.firebasestorage.app",
-    messagingSenderId: "655734827133",
-    appId: "1:655734827133:web:2caa7fcb402ff107f0e914",
-    measurementId: "G-ZWQ7ETZTDG"
-  };
-
-  // 3. Ligando o motor do Firebase no site
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  // ======================================================
-  // FUNÇÃO: Enviar o artigo digitado direto para a nuvem
-  // ======================================================
-  function salvarArtigoNaNuvem(titulo, texto, tag) {
-    db.collection("artigos").add({
-      titulo: titulo,
-      texto: texto,
-      tag: tag,
-      dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
-    })
-    .then(() => {
-      alert("Artigo publicado com sucesso na nuvem do Firebase!");
-      carregarArtigosDaNuvem(); // Atualiza a página para o artigo aparecer
-    })
-    .catch((error) => {
-      console.error("Erro ao salvar artigo: ", error);
-      alert("Ops, deu erro ao salvar!");
-    });
-  }
-
-  // ======================================================
-  // FUNÇÃO: Buscar os artigos da nuvem e mostrar na tela
-  // ======================================================
-  function carregarArtigosDaNuvem() {
-    db.collection("artigos").orderBy("dataCriacao", "desc").get().then((querySnapshot) => {
-      // Procura o lugar no seu HTML onde os artigos ficam guardados
-      const container = document.querySelector('.container-artigos') || document.body; 
-      
-      // Limpa os artigos que o usuário postou antes (para não duplicar na tela)
-      const artigosAntigos = container.querySelectorAll('.artigo-dinamico');
-      artigosAntigos.forEach(artigo => artigo.remove());
-
-      // Passa de artigo em artigo na nuvem e joga pro seu HTML
-      querySnapshot.forEach((doc) => {
-        const dados = doc.data();
-        
-        const artigoHTML = `
-          <article class="card artigo-dinamico">
-            <span class="tag">${dados.tag || 'Tecnologia'}</span>
-            <h2>${dados.titulo}</h2>
-            <p>${dados.texto}</p>
-          </article>
-        `;
-        
-        container.insertAdjacentHTML('beforeend', artigoHTML);
-      });
-    });
-  }
-
-  // Executa a busca automática assim que o seu site terminar de abrir
-  window.onload = function() {
-    carregarArtigosDaNuvem();
-  };
-</script>
-
 </body>
 </html>
-
