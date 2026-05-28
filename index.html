@@ -1,1 +1,643 @@
-<
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo Tech - Portal Interativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: #0f172a;
+            color: #fff;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            color: #38bdf8;
+            cursor: pointer;
+        }
+
+        /* Barra de Pesquisa */
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 5px 15px;
+            width: 300px;
+        }
+
+        .search-container input {
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-container span {
+            color: #94a3b8;
+            cursor: pointer;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+            align-items: center;
+        }
+
+        nav a, .nav-btn {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        nav a:hover, .nav-btn:hover {
+            color: #38bdf8;
+        }
+
+        .btn-pub {
+            background-color: #38bdf8;
+            color: #0f172a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .btn-pub:hover {
+            background-color: #0ea5e9;
+            color: white;
+        }
+
+        /* Conteúdo Principal */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            border-left: 5px solid #38bdf8;
+            padding-left: 10px;
+            color: #0f172a;
+        }
+
+        .grid-tech {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #e2e8f0;
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-tag {
+            display: inline-block;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            align-self: flex-start;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+
+        .card-text {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .card-author {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .pdf-link {
+            display: inline-block;
+            background: #ef4444;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* Modais (Janelas Flutuantes) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        /* Formulários */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+        .form-row-file {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Botão estilizado de Foto (+) */
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            flex: 1;
+        }
+        .btn-upload {
+            border: 2px dashed #cbd5e1;
+            color: #64748b;
+            background-color: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+        }
+        .upload-btn-wrapper input[type=file] {
+            position: absolute; left: 0; top: 0; opacity: 0; font-size: 100px; cursor: pointer;
+        }
+
+        .pdf-box {
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+        }
+        .btn-delete-file {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .btn-submit:hover { background: #16a34a; }
+
+        .switch-auth {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .switch-auth span {
+            color: #38bdf8;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #0f172a;
+            color: #94a3b8;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .header-container { flex-direction: column; }
+            .search-container { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header>
+        <div class="header-container">
+            <div class="logo" onclick="window.location.reload()">
+                <h1>Mundo<span>Tech</span></h1>
+            </div>
+            
+            <!-- Barra de Pesquisa com Lupa -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Pesquisar artigos..." oninput="filtrarArtigos()">
+                <span>🔍</span>
+            </div>
+
+            <nav>
+                <ul>
+                    <li><button class="nav-btn btn-pub" onclick="verificarLoginParaPublicar()">+ Publicar</button></li>
+                    <li id="auth-menu"><button class="nav-btn" onclick="openModal('modal-auth')">Entrar / Cadastrar</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Seção Principal -->
+    <main class="container">
+        <h3 class="section-title" id="feed-title">Todos os Artigos</h3>
+        <div class="grid-tech" id="articles-feed">
+            <!-- Artigos entram aqui dinamicamente -->
+        </div>
+    </main>
+
+    <!-- MODAL DE AUTENTICAÇÃO (LOGIN / SIGN UP) -->
+    <div id="modal-auth" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal-auth')">&times;</span>
+            <div id="auth-login-view">
+                <h2 style="margin-bottom: 20px;">Fazer Login</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Usuário ou Email</label>
+                        <input type="text" id="login-user" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" id="login-pass" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Entrar</button>
+                </form>
+                <div class="switch-auth">Não tem uma conta? <span onclick="toggleAuthView(false)">Cadastre-se</span></div>
+            </div>
+
+            <div id="auth-register-view" style="display: none;">
+                <h2 style="margin-bottom: 20px;">Criar Conta (Sign Up)</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>Nome Completo / Apelido</label>
+                        <input type="text" id="reg-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Usuário</label>
+                        <input type="text" id="reg-user" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" id="reg-pass" required>
+                    </div>
+                    <button type="submit" class="btn-submit" style="background: #38bdf8;">Registrar Conta</button>
+                </form>
+                <div class="switch-auth">Já tem conta? <span onclick="toggleAuthView(true)">Faça Login</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PUBLICAÇÃO -->
+    <div id="modal-publish" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal-publish')">&times;</span>
+            <h2 style="margin-bottom: 20px;">Escrever Novo Artigo</h2>
+            <form onsubmit="handlePublish(event)">
+                <div class="form-group">
+                    <label>Título do Artigo</label>
+                    <input type="text" id="pub-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="pub-category">
+                        <option value="Inteligência Artificial">Inteligência Artificial</option>
+                        <option value="Celulares">Celulares</option>
+                        <option value="Laptops">Laptops</option>
+                        <option value="Computadores">Computadores</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Conteúdo do Artigo</label>
+                    <textarea id="pub-text" rows="5" placeholder="Escreva ou cole seu artigo aqui..." required></textarea>
+                </div>
+
+                <!-- upload de foto e pdf -->
+                <div class="form-row-file">
+                    <div class="upload-btn-wrapper">
+                        <button type="button" class="btn-upload" title="Adicionar Foto de Capa">📸 + </button>
+                        <input type="file" id="pub-img" accept="image/*" onchange="previewImage(this)">
+                    </div>
+                    <div class="upload-btn-wrapper">
+                        <button type="button" class="btn-upload" style="border-color: #ef4444; color: #ef4444;" title="Inserir Documento PDF">📄 PDF</button>
+                        <input type="file" id="pub-pdf" accept=".pdf" onchange="previewPdf(this)">
+                    </div>
+                </div>
+
+                <!-- previews de anexo -->
+                <div id="pdf-preview-area" style="margin-bottom: 15px; display: none;">
+                    <div class="pdf-box">
+                        <span id="pdf-name-label">arquivo.pdf</span>
+                        <button type="button" class="btn-delete-file" onclick="removePdf()">Excluir</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Publicar Artigo</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Mundo Tech. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Banco de dados simulado no LocalStorage
+        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        let artigos = JSON.parse(localStorage.getItem('artigos')) || [
+            {
+                id: 1,
+                titulo: "A Revolução das Novas IAs Generativas",
+                categoria: "Inteligência Artificial",
+                texto: "Descubra como os novos modelos de linguagem estão transformando o mercado de trabalho.",
+                autor: "Sistema",
+                img: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=500&q=80",
+                pdf: null
+            },
+            {
+                id: 2,
+                titulo: "Os Melhores Smartphones do Ano",
+                categoria: "Celulares",
+                texto: "Análise completa das novas câmeras e baterias de altíssima duração.",
+                autor: "Sistema",
+                img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80",
+                pdf: null
+            }
+        ];
+        let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
+        let imagemCarregadaBase64 = null;
+        let pdfCarregadoNome = null;
+
+        // Controle dos Modais
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function toggleAuthView(showLogin) {
+            document.getElementById('auth-login-view').style.display = showLogin ? 'block' : 'none';
+            document.getElementById('auth-register-view').style.display = showLogin ? 'none' : 'block';
+        }
+
+        // Sistema de Login/Cadastro
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const user = document.getElementById('reg-user').value.toLowerCase();
+            const pass = document.getElementById('reg-pass').value;
+
+            if(usuarios.find(u => u.user === user)) { return alert('Este usuário já existe!'); }
+
+            usuarios.push({ name, user, pass });
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            alert('Conta criada com sucesso! Faça o login.');
+            toggleAuthView(true);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('login-user').value.toLowerCase();
+            const pass = document.getElementById('login-pass').value;
+
+            const conta = usuarios.find(u => u.user === user && u.pass === pass);
+            if(user === 'admin' && pass === 'admin') { // Conta padrão para testes rapido
+                usuarioLogado = { name: "Administrador", user: "admin" };
+            } else if (!conta) {
+                return alert('Usuário ou senha incorretos.');
+            } else {
+                usuarioLogado = conta;
+            }
+
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+            atualizarMenuAuth();
+            closeModal('modal-auth');
+        }
+
+        function fazerLogout() {
+            usuarioLogado = null;
+            localStorage.removeItem('usuarioLogado');
+            atualizarMenuAuth();
+        }
+
+        function atualizarMenuAuth() {
+            const menu = document.getElementById('auth-menu');
+            if(usuarioLogado) {
+                menu.innerHTML = `<span style="color:#38bdf8; font-weight:bold; margin-right:10px;">Olá, ${usuarioLogado.name}</span> <button class="nav-btn" onclick="fazerLogout()" style="color:#ef4444">[Sair]</button>`;
+            } else {
+                menu.innerHTML = `<button class="nav-btn" onclick="openModal('modal-auth')">Entrar / Cadastrar</button>`;
+            }
+        }
+
+        function verificarLoginParaPublicar() {
+            if(!usuarioLogado) {
+                alert('Você precisa estar logado (Sign In) para publicar um artigo!');
+                openModal('modal-auth');
+            } else {
+                openModal('modal-publish');
+            }
+        }
+
+        // Manipulação de arquivos (Foto e PDF)
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { imagemCarregadaBase64 = e.target.result; alert('Foto carregada com sucesso!'); }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewPdf(input) {
+            if (input.files && input.files[0]) {
+                pdfCarregadoNome = input.files[0].name;
+                document.getElementById('pdf-name-label').innerText = pdfCarregadoNome;
+                document.getElementById('pdf-preview-area').style.display = 'block';
+            }
+        }
+
+        function removePdf() {
+            document.getElementById('pub-pdf').value = "";
+            pdfCarregadoNome = null;
+            document.getElementById('pdf-preview-area').style.display = 'none';
+        }
+
+        // Publicar Artigo
+        function handlePublish(e) {
+            e.preventDefault();
+            const titulo = document.getElementById('pub-title').value;
+            const categoria = document.getElementById('pub-category').value;
+            const texto = document.getElementById('pub-text').value;
+
+            const novoArtigo = {
+                id: Date.now(),
+                titulo,
+                categoria,
+                texto,
+                autor: usuarioLogado.name,
+                img: imagemCarregadaBase64 || "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80",
+                pdf: pdfCarregadoNome ? "#" : null // Simulação de link do PDF
+            };
+
+            artigos.unshift(novoArtigo);
+            localStorage.setItem('artigos', JSON.stringify(artigos));
+            
+            // Resetar formulário
+            document.getElementById('pub-title').value = "";
+            document.getElementById('pub-text').value = "";
+            imagemCarregadaBase64 = null;
+            removePdf();
+
+            closeModal('modal-publish');
+            renderizarArtigos(artigos);
+            alert('Artigo publicado com sucesso!');
+        }
+
+        // Renderizar Feed na Tela
+        function renderizarArtigos(lista) {
+            const feed = document.getElementById('articles-feed');
+            feed.innerHTML = "";
+
+            if(lista.length === 0) {
+                feed.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#64748b; padding:40px;">Nenhum artigo encontrado.</p>`;
+                return;
+            }
+
+            lista.forEach(art => {
+                const card = document.createElement('article');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${art.img}" alt="Imagem do Artigo" class="card-img">
+                    <div class="card-content">
+                        <span class="category-tag">${art.categoria}</span>
+                        <h4 class="card-title">${art.titulo}</h4>
+                        <p class="card-author">Por: ${art.autor}</p>
+                        <p class="card-text">${art.texto}</p>
+                        ${art.pdf ? `<a href="#" class="pdf-link" onclick="alert('Este é um PDF demonstrativo anexado: ${art.titulo}')">📄 Baixar PDF</a>` : ''}
+                    </div>
+                `;
+                feed.appendChild(card);
+            });
+        }
+
+        // Sistema de Busca por Filtro
+        function filtrarArtigos() {
+            const termo = document.getElementById('search-input').value.toLowerCase();
+            const filtrados = artigos.filter(art => 
+                art.titulo.toLowerCase().includes(termo) || 
+                art.texto.toLowerCase().includes(termo) ||
+                art.categoria.toLowerCase().includes(termo)
+            );
+            renderizarArtigos(filtrados);
+        }
+
+        // Inicialização automática ao abrir a página
+        atualizarMenuAuth();
+        renderizarArtigos(artigos);
+    </script>
+</body>
+</html>
+
