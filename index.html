@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mundo Tech - Portal Interativo</title>
+    
+    <!-- ÍCONES OFICIAIS PARA O GOOGLE RECONHECER O FAVICON -->
+    <link rel="icon" type="image/png" href="logo-tech.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="logo-tech.png">
+
     <style>
         * {
             margin: 0;
@@ -22,7 +27,7 @@
         header {
             background-color: #0f172a;
             color: #fff;
-            padding: 20px;
+            padding: 15px 20px;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -35,14 +40,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 15px;
         }
 
         .logo h1 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: #38bdf8;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         /* Barra de Pesquisa */
@@ -53,7 +59,8 @@
             background: #1e293b;
             border-radius: 20px;
             padding: 5px 15px;
-            width: 300px;
+            flex-grow: 1;
+            max-width: 400px;
         }
 
         .search-container input {
@@ -63,6 +70,7 @@
             padding: 5px;
             width: 100%;
             outline: none;
+            font-size: 0.9rem;
         }
 
         .search-container span {
@@ -73,35 +81,51 @@
         nav ul {
             display: flex;
             list-style: none;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
         }
 
-        nav a, .nav-btn {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-            background: none;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        nav a:hover, .nav-btn:hover {
-            color: #38bdf8;
-        }
-
+        /* Botões do Menu Minimalistas para Telemóvel */
         .btn-pub {
             background-color: #38bdf8;
             color: #0f172a;
-            padding: 8px 16px;
-            border-radius: 20px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.3rem;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
         }
         .btn-pub:hover {
             background-color: #0ea5e9;
             color: white;
+        }
+
+        .nav-btn-icon {
+            color: #cbd5e1;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        .nav-btn-icon:hover {
+            color: #38bdf8;
+        }
+
+        .logout-link {
+            color: #ef4444;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 4px;
         }
 
         /* Conteúdo Principal */
@@ -249,52 +273,6 @@
             border: 1px solid #cbd5e1;
             border-radius: 6px;
         }
-        .form-row-file {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        /* Botão estilizado de Foto (+) */
-        .upload-btn-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            flex: 1;
-        }
-        .btn-upload {
-            border: 2px dashed #cbd5e1;
-            color: #64748b;
-            background-color: #f8fafc;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-        }
-        .upload-btn-wrapper input[type=file] {
-            position: absolute; left: 0; top: 0; opacity: 0; font-size: 100px; cursor: pointer;
-        }
-
-        .pdf-box {
-            border: 1px solid #cbd5e1;
-            padding: 10px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
-        }
-        .btn-delete-file {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
 
         .btn-submit {
             width: 100%;
@@ -321,6 +299,32 @@
             text-decoration: underline;
         }
 
+        /* BARRA DE AVISO DE COOKIES (Exigência AdSense) */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background-color: #0f172a;
+            color: #cbd5e1;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 3000;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
+            font-size: 0.85rem;
+        }
+        .cookie-btn {
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 15px;
+            white-space: nowrap;
+        }
+
         footer {
             background-color: #0f172a;
             color: #94a3b8;
@@ -329,14 +333,20 @@
             margin-top: 60px;
         }
 
-        @media (max-width: 768px) {
-            .header-container { flex-direction: column; }
-            .search-container { width: 100%; }
+        @media (max-width: 600px) {
+            .logo h1 { font-size: 1.2rem; }
+            .search-container { max-width: 160px; padding: 5px 10px; }
+            .search-container input { font-size: 0.8rem; }
+            nav ul { gap: 8px; }
+            .btn-pub { width: 32px; height: 32px; font-size: 1.1rem; }
+            .cookie-banner { flex-direction: column; text-align: center; gap: 10px; }
+            .cookie-btn { margin-left: 0; width: 100%; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Cabeçalho Compacto -->
     <header>
         <div class="header-container">
             <div class="logo" onclick="window.location.reload()">
@@ -344,25 +354,34 @@
             </div>
             
             <div class="search-container">
-                <input type="text" id="search-input" placeholder="Pesquisar artigos..." oninput="filtrarArtigos()">
+                <input type="text" id="search-input" placeholder="Pesquisar..." oninput="filtrarArtigos()">
                 <span>🔍</span>
             </div>
 
             <nav>
                 <ul>
-                    <li><button class="nav-btn btn-pub" onclick="verificarLoginParaPublicar()">+ Publicar</button></li>
-                    <li id="auth-menu"><button class="nav-btn" onclick="openModal('modal-auth')">Entrar / Cadastrar</button></li>
+                    <li><button class="btn-pub" onclick="verificarLoginParaPublicar()" title="Publicar Artigo">+</button></li>
+                    <li id="auth-menu"><button class="nav-btn-icon" onclick="openModal('modal-auth')" title="Entrar / Cadastrar">👤</button></li>
                 </ul>
             </nav>
         </div>
     </header>
 
+    <!-- Seção Principal -->
     <main class="container">
         <h3 class="section-title" id="feed-title">Todos os Artigos</h3>
         <div class="grid-tech" id="articles-feed">
-            </div>
+            <!-- Artigos entram aqui dinamicamente -->
+        </div>
     </main>
 
+    <!-- BARRA DE COOKIES -->
+    <div id="cookie-box" class="cookie-banner" style="display: none;">
+        <span>Nós utilizamos cookies e outras tecnologias semelhantes para melhorar a sua experiência no Mundo Tech, de acordo com a nossa Política de Privacidade.</span>
+        <button class="cookie-btn" onclick="aceitarCookies()">Aceitar</button>
+    </div>
+
+    <!-- MODAL DE LEITURA COMPLETA -->
     <div id="modal-read" class="modal">
         <div class="modal-content" style="max-width: 700px;">
             <span class="close-modal" onclick="closeModal('modal-read')">&times;</span>
@@ -375,6 +394,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE AUTENTICAÇÃO -->
     <div id="modal-auth" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('modal-auth')">&times;</span>
@@ -398,7 +418,7 @@
                 <h2 style="margin-bottom: 20px;">Criar Conta (Sign Up)</h2>
                 <form onsubmit="handleRegister(event)">
                     <div class="form-group">
-                        <label>Nome Completo / Apelido</label>
+                        <label>Nome Completo</label>
                         <input type="text" id="reg-name" required>
                     </div>
                     <div class="form-group">
@@ -416,6 +436,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE PUBLICAÇÃO -->
     <div id="modal-publish" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('modal-publish')">&times;</span>
@@ -436,80 +457,63 @@
                 </div>
                 <div class="form-group">
                     <label>Conteúdo do Artigo</label>
-                    <textarea id="pub-text" rows="5" placeholder="Escreva ou cole seu artigo aqui..." required></textarea>
+                    <textarea id="pub-text" rows="5" placeholder="Escreva seu artigo aqui..." required></textarea>
                 </div>
-
-                <div class="form-row-file">
-                    <div class="upload-btn-wrapper">
-                        <button type="button" class="btn-upload" title="Adicionar Foto de Capa">📸 + </button>
-                        <input type="file" id="pub-img" accept="image/*" onchange="previewImage(this)">
-                    </div>
-                    <div class="upload-btn-wrapper">
-                        <button type="button" class="btn-upload" style="border-color: #ef4444; color: #ef4444;" title="Inserir Documento PDF">📄 PDF</button>
-                        <input type="file" id="pub-pdf" accept=".pdf" onchange="previewPdf(this)">
-                    </div>
-                </div>
-
-                <div id="pdf-preview-area" style="margin-bottom: 15px; display: none;">
-                    <div class="pdf-box">
-                        <span id="pdf-name-label">arquivo.pdf</span>
-                        <button type="button" class="btn-delete-file" onclick="removePdf()">Excluir</button>
-                    </div>
-                </div>
-
                 <button type="submit" class="btn-submit">Publicar Artigo</button>
             </form>
         </div>
     </div>
 
+    <!-- MODAL: TERMOS DE CONDIÇÕES -->
     <div id="modal-termos" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <span class="close-modal" onclick="closeModal('modal-termos')">&times;</span>
             <h2 style="margin-bottom: 20px; color: #0f172a;">Termos de Condições</h2>
-            <div style="color: #334155; font-size: 0.95rem; max-height: 60vh; overflow-y: auto; text-align: left; padding-right: 5px;">
-                <p><strong>1. Aceitação dos Termos:</strong> Ao aceder ao Mundo Tech, você concorda em cumprir estes termos de serviço e todas as leis aplicáveis.</p><br>
-                <p><strong>2. Propriedade Intelectual:</strong> Todo o conteúdo publicado neste portal, incluindo artigos e imagens, é de propriedade do Mundo Tech ou de seus autores identificados.</p><br>
-                <p><strong>3. Uso de Conteúdo:</strong> É proibida a cópia ou redistribuição de nossos artigos para fins comerciais sem autorização prévia por escrito.</p><br>
-                <p><strong>4. Modificações:</strong> Reservamo-nos o direito de alterar estes termos a qualquer momento, sem aviso prévio.</p>
+            <div style="color: #334155; font-size: 0.95rem; text-align: left;">
+                <p><strong>1. Aceitação dos Termos:</strong> Ao aceder ao site Mundo Tech, você concorda de forma integral com estes termos de serviço e diretrizes legais.</p><br>
+                <p><strong>2. Uso do Conteúdo:</strong> Todo o material informativo publicado no portal visa a partilha de conhecimento sobre tecnologia. É estritamente proibida a reprodução para fins lucrativos sem atribuição de créditos.</p><br>
+                <p><strong>3. Responsabilidade do Usuário:</strong> O utilizador compromete-se a efetuar publicações legítimas dentro da plataforma, respeitando as leis comunitárias de direitos de autor.</p>
             </div>
         </div>
     </div>
 
+    <!-- MODAL: POLÍTICA DE PRIVACIDADE -->
     <div id="modal-privacidade" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <span class="close-modal" onclick="closeModal('modal-privacidade')">&times;</span>
             <h2 style="margin-bottom: 20px; color: #0f172a;">Política de Privacidade</h2>
-            <div style="color: #334155; font-size: 0.95rem; max-height: 60vh; overflow-y: auto; text-align: left; padding-right: 5px;">
-                <p>A sua privacidade é extremamente importante para nós. É política do Mundo Tech respeitar a sua privacidade em relação a qualquer informação que possamos coletar no site.</p><br>
-                <p><strong>1. Coleta de Informações:</strong> Solicitamos informações pessoais (como nome e e-mail) apenas quando realmente precisamos delas para lhe fornecer um serviço, como o cadastro para publicação de artigos.</p><br>
-                <p><strong>2. Uso de Cookies e Anúncios:</strong> O nosso site utiliza identificadores locais e pode vir a exibir anúncios que coletam dados de navegação anónimos para personalizar a sua experiência.</p><br>
-                <p><strong>3. Segurança:</strong> Protegemos os dados armazenados dentro dos padrões de segurança do Google Firebase para evitar acessos não autorizados.</p>
+            <div style="color: #334155; font-size: 0.95rem; text-align: left;">
+                <p>A sua privacidade é de suma importância para a administração do Mundo Tech. Coletamos e processamos dados de registo seguindo elevados padrões de proteção.</p><br>
+                <p><strong>1. Coleta de Informação:</strong> Armazenamos apenas o nome e e-mail informados voluntariamente na criação de conta para validação de segurança no Firebase.</p><br>
+                <p><strong>2. Anúncios de Terceiros:</strong> Este portal está preparado para operar com sistemas de publicidade (como o Google AdSense), que usam cookies analíticos para entregar anúncios relevantes baseados nas suas visitas anteriores.</p>
             </div>
         </div>
     </div>
 
+    <!-- MODAL: CONTATO -->
     <div id="modal-contato" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('modal-contato')">&times;</span>
             <h2 style="margin-bottom: 20px; color: #0f172a;">Entre em Contato</h2>
-            <form onsubmit="alert('Mensagem enviada com sucesso! Entraremos em contato em breve.'); closeModal('modal-contato'); event.preventDefault();">
+            <form onsubmit="salvarMensagemContato(event)">
                 <div class="form-group">
                     <label>Seu Nome</label>
-                    <input type="text" placeholder="Digite seu nome completo" required>
+                    <input type="text" id="contato-nome" required>
                 </div>
                 <div class="form-group">
                     <label>Seu E-mail</label>
-                    <input type="email" placeholder="seu-email@gmail.com" required>
+                    <input type="email" id="contato-email" required>
                 </div>
                 <div class="form-group">
                     <label>Mensagem</label>
-                    <textarea rows="4" placeholder="Escreva sua dúvida, sugestão ou feedback aqui..." required></textarea>
+                    <textarea id="contato-msg" rows="4" required></textarea>
                 </div>
                 <button type="submit" class="btn-submit" style="background: #38bdf8;">Enviar Mensagem</button>
             </form>
         </div>
     </div>
 
+    <!-- Rodapé -->
     <footer>
         <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; align-items: center;">
             <p>&copy; 2026 Mundo Tech. Todos os direitos reservados.</p>
@@ -521,12 +525,12 @@
         </div>
     </footer>
 
+    <!-- Firebase SDK Compat v10 -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <script>
-        // Configuração Oficial do seu Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDR__hU1fUnvb4mss0i_hv7-aIQBSD3etE",
             authDomain: "newstec-ca17d.firebaseapp.com",
@@ -537,17 +541,12 @@
             measurementId: "G-ZWQ7ETZTDG"
         };
 
-        // Inicializa o Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Variáveis Globais de Controle local
         let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
-        let imagemCarregadaBase64 = null;
-        let pdfCarregadoNome = null;
-        let listaArtigosAtual = []; // Guarda cópia local dos artigos do Firebase para buscas rápidos
+        let listaArtigosAtual = [];
 
-        // Modais básicos
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         
@@ -556,30 +555,33 @@
             document.getElementById('auth-register-view').style.display = showLogin ? 'none' : 'block';
         }
 
-        // ======================================================
-        // SISTEMA REAL DE AUTENTICAÇÃO DO FIREBASE (NUVEM)
-        // ======================================================
-        
+        // BARRA DE COOKIES GESTÃO
+        function verificarCookies() {
+            if(!localStorage.getItem('cookiesAceitos')) {
+                document.getElementById('cookie-box').style.display = 'flex';
+            }
+        }
+        function aceitarCookies() {
+            localStorage.setItem('cookiesAceitos', 'true');
+            document.getElementById('cookie-box').style.display = 'none';
+        }
+
+        // AUTH
         function handleRegister(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-user').value.trim();
             const pass = document.getElementById('reg-pass').value;
 
-            if(pass.length < 6) { return alert('A senha precisa ter no mínimo 6 caracteres!'); }
-
             firebase.auth().createUserWithEmailAndPassword(email, pass)
             .then((userCredential) => {
                 return userCredential.user.updateProfile({ displayName: name });
             })
             .then(() => {
-                alert('Conta de administrador criada na nuvem com sucesso! Faça o login.');
+                alert('Conta criada na nuvem! Faça o login.');
                 toggleAuthView(true);
             })
-            .catch((error) => {
-                console.error("Erro ao registrar: ", error);
-                alert('Erro ao criar conta: ' + error.message);
-            });
+            .catch((error) => { alert(error.message); });
         }
 
         function handleLogin(e) {
@@ -595,10 +597,7 @@
                 atualizarMenuAuth();
                 closeModal('modal-auth');
             })
-            .catch((error) => {
-                console.error("Erro ao logar: ", error);
-                alert('Usuário ou senha incorretos na nuvem do Firebase.');
-            });
+            .catch((error) => { alert('Dados incorretos no Firebase.'); });
         }
 
         function fazerLogout() {
@@ -612,77 +611,45 @@
         function atualizarMenuAuth() {
             const menu = document.getElementById('auth-menu');
             if(usuarioLogado) {
-                menu.innerHTML = `<span style="color:#38bdf8; font-weight:bold; margin-right:10px;">Olá, ${usuarioLogado.name}</span> <button class="nav-btn" onclick="fazerLogout()" style="color:#ef4444">[Sair]</button>`;
+                menu.innerHTML = `<span style="color:#38bdf8; font-size:0.85rem; font-weight:bold;">${usuarioLogado.name.split(' ')[0]}</span><a class="logout-link" onclick="fazerLogout()">[Sair]</a>`;
             } else {
-                menu.innerHTML = `<button class="nav-btn" onclick="openModal('modal-auth')">Entrar / Cadastrar</button>`;
+                menu.innerHTML = `<button class="nav-btn-icon" onclick="openModal('modal-auth')">👤</button>`;
             }
         }
 
         function verificarLoginParaPublicar() {
-            if(!usuarioLogado) {
-                alert('Você precisa estar logado para publicar um artigo!');
-                openModal('modal-auth');
-            } else {
-                openModal('modal-publish');
-            }
+            if(!usuarioLogado) { alert('Faça login primeiro!'); openModal('modal-auth'); }
+            else { openModal('modal-publish'); }
         }
 
-        // Upload local de mídias (Base64 provisório)
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) { imagemCarregadaBase64 = e.target.result; alert('Foto carregada com sucesso!'); }
-                reader.readAsDataURL(input.files[0]);
-            }
+        // CONTATO NO FIRESTORE
+        function salvarMensagemContato(e) {
+            e.preventDefault();
+            db.collection("mensagens").add({
+                nome: document.getElementById('contato-nome').value,
+                email: document.getElementById('contato-email').value,
+                mensagem: document.getElementById('contato-msg').value,
+                dataEnvio: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                alert('Mensagem salva com sucesso!');
+                closeModal('modal-contato');
+            });
         }
 
-        function previewPdf(input) {
-            if (input.files && input.files[0]) {
-                pdfCarregadoNome = input.files[0].name;
-                document.getElementById('pdf-name-label').innerText = pdfCarregadoNome;
-                document.getElementById('pdf-preview-area').style.display = 'block';
-            }
-        }
-
-        function removePdf() {
-            document.getElementById('pub-pdf').value = "";
-            pdfCarregadoNome = null;
-            document.getElementById('pdf-preview-area').style.display = 'none';
-        }
-
-        // ======================================================
-        // SISTEMA REAL DO FIREBASE FIRESTORE (ARTIGOS)
-        // ======================================================
-
+        // ARTIGOS
         function handlePublish(e) {
             e.preventDefault();
-            const titulo = document.getElementById('pub-title').value;
-            const categoria = document.getElementById('pub-category').value;
-            const texto = document.getElementById('pub-text').value;
-
-            const padraoImg = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80";
-
             db.collection("artigos").add({
-                titulo: titulo,
-                categoria: categoria,
-                texto: texto,
+                titulo: document.getElementById('pub-title').value,
+                categoria: document.getElementById('pub-category').value,
+                texto: document.getElementById('pub-text').value,
                 autor: usuarioLogado.name,
-                img: imagemCarregadaBase64 || padraoImg,
-                pdf: pdfCarregadoNome || null,
+                img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80",
                 dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                alert("Artigo publicado com sucesso na nuvem do Firebase!");
-                document.getElementById('pub-title').value = "";
-                document.getElementById('pub-text').value = "";
-                imagemCarregadaBase64 = null;
-                removePdf();
+            }).then(() => {
+                alert("Artigo salvo!");
                 closeModal('modal-publish');
                 carregarArtigosDaNuvem();
-            })
-            .catch((error) => {
-                console.error("Erro ao salvar artigo: ", error);
-                alert("Erro ao salvar o artigo no banco de dados.");
             });
         }
 
@@ -692,117 +659,47 @@
                 listaArtigosAtual = [];
                 const feed = document.getElementById('articles-feed');
                 feed.innerHTML = "";
-
-                if(querySnapshot.empty) {
-                    feed.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#64748b; padding:40px;">Nenhum artigo encontrado na nuvem.</p>`;
-                    return;
-                }
-
                 querySnapshot.forEach((doc) => {
                     const art = doc.data();
-                    art.id = doc.id; 
+                    art.id = doc.id;
                     listaArtigosAtual.push(art);
-
                     const card = document.createElement('article');
                     card.className = 'card';
                     card.onclick = () => abrirArtigoCompleto(art.id);
-                    
                     card.innerHTML = `
-                        <img src="${art.img}" alt="Imagem do Artigo" class="card-img">
+                        <img src="${art.img}" class="card-img">
                         <div class="card-content">
                             <span class="category-tag">${art.categoria || 'Geral'}</span>
                             <h4 class="card-title">${art.titulo}</h4>
-                            <p class="card-author">Por: ${art.autor || 'Anônimo'}</p>
+                            <p class="card-author">Por: ${art.autor}</p>
                             <p class="card-text">${art.texto}</p>
-                            ${art.pdf ? `<span class="pdf-link">📄 Tem PDF Anexo</span>` : ''}
                         </div>
                     `;
                     feed.appendChild(card);
                 });
-            })
-            .catch((error) => {
-                console.error("Erro ao buscar artigos: ", error);
             });
         }
 
         function abrirArtigoCompleto(id) {
-            const artigo = listaArtigosAtual.find(a => a.id === id);
-            if(!artigo) return;
-
-            document.getElementById('view-title').innerText = artigo.titulo;
-            document.getElementById('view-category').innerText = artigo.categoria || 'Geral';
-            document.getElementById('view-author').innerText = `Por: ${artigo.autor || 'Anônimo'}`;
-            document.getElementById('view-text').innerText = artigo.texto;
-
+            const art = listaArtigosAtual.find(a => a.id === id);
+            if(!art) return;
+            document.getElementById('view-title').innerText = art.titulo;
+            document.getElementById('view-category').innerText = art.categoria;
+            document.getElementById('view-author').innerText = `Por: ${art.autor}`;
+            document.getElementById('view-text').innerText = art.texto;
             const imgEl = document.getElementById('view-img');
-            if(artigo.img) {
-                imgEl.src = artigo.img;
-                imgEl.style.display = 'block';
-            } else {
-                imgEl.style.display = 'none';
-            }
-
-            const pdfArea = document.getElementById('view-pdf-area');
-            if(artigo.pdf) {
-                pdfArea.innerHTML = `<a href="#" class="pdf-link" onclick="alert('Documento anexado para leitura: ${artigo.pdf}')">📄 Baixar Documento: ${artigo.pdf}</a>`;
-            } else {
-                pdfArea.innerHTML = '';
-            }
-
+            imgEl.src = art.img; imgEl.style.display = 'block';
             openModal('modal-read');
         }
 
-        function filtrarArtigos() {
-            const termo = document.getElementById('search-input').value.toLowerCase();
-            const feed = document.getElementById('articles-feed');
-            feed.innerHTML = "";
-
-            const filtrados = listaArtigosAtual.filter(art => 
-                art.titulo.toLowerCase().includes(termo) || 
-                art.texto.toLowerCase().includes(termo) ||
-                (art.categoria && art.categoria.toLowerCase().includes(termo))
-            );
-
-            if(filtrados.length === 0) {
-                feed.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#64748b; padding:40px;">Nenhum resultado para a sua pesquisa.</p>`;
-                return;
-            }
-
-            filtrados.forEach(art => {
-                const card = document.createElement('article');
-                card.className = 'card';
-                card.onclick = () => abrirArtigoCompleto(art.id);
-                card.innerHTML = `
-                    <img src="${art.img}" alt="Imagem do Artigo" class="card-img">
-                    <div class="card-content">
-                        <span class="category-tag">${art.categoria || 'Geral'}</span>
-                        <h4 class="card-title">${art.titulo}</h4>
-                        <p class="card-author">Por: ${art.autor || 'Anônimo'}</p>
-                        <p class="card-text">${art.texto}</p>
-                        ${art.pdf ? `<span class="pdf-link">📄 Tem PDF Anexo</span>` : ''}
-                    </div>
-                `;
-                feed.appendChild(card);
-            });
-        }
-
-        // Execuções automáticas e monitoramento do estado de login real
         window.onload = function() {
-            // Monitora em tempo real se há um usuário ativo no Firebase
             firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    usuarioLogado = { name: user.displayName || user.email, user: user.email };
-                    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-                } else {
-                    usuarioLogado = null;
-                    localStorage.removeItem('usuarioLogado');
-                }
+                if (user) usuarioLogado = { name: user.displayName || user.email, user: user.email };
                 atualizarMenuAuth();
             });
-            
             carregarArtigosDaNuvem();
+            verificarCookies();
         };
     </script>
 </body>
 </html>
-
