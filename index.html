@@ -337,14 +337,12 @@
 </head>
 <body>
 
-    <!-- Cabeçalho -->
     <header>
         <div class="header-container">
             <div class="logo" onclick="window.location.reload()">
                 <h1>Mundo<span>Tech</span></h1>
             </div>
             
-            <!-- Barra de Pesquisa com Lupa -->
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Pesquisar artigos..." oninput="filtrarArtigos()">
                 <span>🔍</span>
@@ -359,15 +357,12 @@
         </div>
     </header>
 
-    <!-- Seção Principal -->
     <main class="container">
         <h3 class="section-title" id="feed-title">Todos os Artigos</h3>
         <div class="grid-tech" id="articles-feed">
-            <!-- Artigos entram aqui dinamicamente vindo do Firebase -->
-        </div>
+            </div>
     </main>
 
-    <!-- MODAL DE LEITURA COMPLETA DO ARTIGO -->
     <div id="modal-read" class="modal">
         <div class="modal-content" style="max-width: 700px;">
             <span class="close-modal" onclick="closeModal('modal-read')">&times;</span>
@@ -380,7 +375,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE AUTENTICAÇÃO (LOGIN / SIGN UP) -->
     <div id="modal-auth" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('modal-auth')">&times;</span>
@@ -388,8 +382,8 @@
                 <h2 style="margin-bottom: 20px;">Fazer Login</h2>
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label>Usuário ou Email</label>
-                        <input type="text" id="login-user" required>
+                        <label>Email do Usuário</label>
+                        <input type="email" id="login-user" placeholder="seu-email@gmail.com" required>
                     </div>
                     <div class="form-group">
                         <label>Senha</label>
@@ -408,11 +402,11 @@
                         <input type="text" id="reg-name" required>
                     </div>
                     <div class="form-group">
-                        <label>Usuário</label>
-                        <input type="text" id="reg-user" required>
+                        <label>Email Válido</label>
+                        <input type="email" id="reg-user" placeholder="seu-email@gmail.com" required>
                     </div>
                     <div class="form-group">
-                        <label>Senha</label>
+                        <label>Senha (mínimo 6 caracteres)</label>
                         <input type="password" id="reg-pass" required>
                     </div>
                     <button type="submit" class="btn-submit" style="background: #38bdf8;">Registrar Conta</button>
@@ -422,7 +416,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE PUBLICAÇÃO -->
     <div id="modal-publish" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('modal-publish')">&times;</span>
@@ -446,7 +439,6 @@
                     <textarea id="pub-text" rows="5" placeholder="Escreva ou cole seu artigo aqui..." required></textarea>
                 </div>
 
-                <!-- upload de foto e pdf -->
                 <div class="form-row-file">
                     <div class="upload-btn-wrapper">
                         <button type="button" class="btn-upload" title="Adicionar Foto de Capa">📸 + </button>
@@ -458,7 +450,6 @@
                     </div>
                 </div>
 
-                <!-- previews de anexo -->
                 <div id="pdf-preview-area" style="margin-bottom: 15px; display: none;">
                     <div class="pdf-box">
                         <span id="pdf-name-label">arquivo.pdf</span>
@@ -471,13 +462,68 @@
         </div>
     </div>
 
+    <div id="modal-termos" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close-modal" onclick="closeModal('modal-termos')">&times;</span>
+            <h2 style="margin-bottom: 20px; color: #0f172a;">Termos de Condições</h2>
+            <div style="color: #334155; font-size: 0.95rem; max-height: 60vh; overflow-y: auto; text-align: left; padding-right: 5px;">
+                <p><strong>1. Aceitação dos Termos:</strong> Ao aceder ao Mundo Tech, você concorda em cumprir estes termos de serviço e todas as leis aplicáveis.</p><br>
+                <p><strong>2. Propriedade Intelectual:</strong> Todo o conteúdo publicado neste portal, incluindo artigos e imagens, é de propriedade do Mundo Tech ou de seus autores identificados.</p><br>
+                <p><strong>3. Uso de Conteúdo:</strong> É proibida a cópia ou redistribuição de nossos artigos para fins comerciais sem autorização prévia por escrito.</p><br>
+                <p><strong>4. Modificações:</strong> Reservamo-nos o direito de alterar estes termos a qualquer momento, sem aviso prévio.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-privacidade" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close-modal" onclick="closeModal('modal-privacidade')">&times;</span>
+            <h2 style="margin-bottom: 20px; color: #0f172a;">Política de Privacidade</h2>
+            <div style="color: #334155; font-size: 0.95rem; max-height: 60vh; overflow-y: auto; text-align: left; padding-right: 5px;">
+                <p>A sua privacidade é extremamente importante para nós. É política do Mundo Tech respeitar a sua privacidade em relação a qualquer informação que possamos coletar no site.</p><br>
+                <p><strong>1. Coleta de Informações:</strong> Solicitamos informações pessoais (como nome e e-mail) apenas quando realmente precisamos delas para lhe fornecer um serviço, como o cadastro para publicação de artigos.</p><br>
+                <p><strong>2. Uso de Cookies e Anúncios:</strong> O nosso site utiliza identificadores locais e pode vir a exibir anúncios que coletam dados de navegação anónimos para personalizar a sua experiência.</p><br>
+                <p><strong>3. Segurança:</strong> Protegemos os dados armazenados dentro dos padrões de segurança do Google Firebase para evitar acessos não autorizados.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-contato" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('modal-contato')">&times;</span>
+            <h2 style="margin-bottom: 20px; color: #0f172a;">Entre em Contato</h2>
+            <form onsubmit="alert('Mensagem enviada com sucesso! Entraremos em contato em breve.'); closeModal('modal-contato'); event.preventDefault();">
+                <div class="form-group">
+                    <label>Seu Nome</label>
+                    <input type="text" placeholder="Digite seu nome completo" required>
+                </div>
+                <div class="form-group">
+                    <label>Seu E-mail</label>
+                    <input type="email" placeholder="seu-email@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Mensagem</label>
+                    <textarea rows="4" placeholder="Escreva sua dúvida, sugestão ou feedback aqui..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit" style="background: #38bdf8;">Enviar Mensagem</button>
+            </form>
+        </div>
+    </div>
+
     <footer>
-        <p>&copy; 2026 Mundo Tech. Todos os direitos reservados.</p>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; align-items: center;">
+            <p>&copy; 2026 Mundo Tech. Todos os direitos reservados.</p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+                <a href="#" onclick="openModal('modal-termos')" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Termos de Condições</a>
+                <a href="#" onclick="openModal('modal-privacidade')" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Política de Privacidade</a>
+                <a href="#" onclick="openModal('modal-contato')" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Contato</a>
+            </div>
+        </div>
     </footer>
 
-    <!-- Importando SDK do Firebase de Compatibilidade -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <script>
         // Configuração Oficial do seu Firebase
@@ -496,7 +542,6 @@
         const db = firebase.firestore();
 
         // Variáveis Globais de Controle local
-        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
         let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
         let imagemCarregadaBase64 = null;
         let pdfCarregadoNome = null;
@@ -511,44 +556,57 @@
             document.getElementById('auth-register-view').style.display = showLogin ? 'none' : 'block';
         }
 
-        // Autenticação de Usuários
+        // ======================================================
+        // SISTEMA REAL DE AUTENTICAÇÃO DO FIREBASE (NUVEM)
+        // ======================================================
+        
         function handleRegister(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
-            const user = document.getElementById('reg-user').value.toLowerCase();
+            const email = document.getElementById('reg-user').value.trim();
             const pass = document.getElementById('reg-pass').value;
 
-            if(usuarios.find(u => u.user === user)) { return alert('Este usuário já existe!'); }
+            if(pass.length < 6) { return alert('A senha precisa ter no mínimo 6 caracteres!'); }
 
-            usuarios.push({ name, user, pass });
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
-            alert('Conta criada com sucesso! Faça o login.');
-            toggleAuthView(true);
+            firebase.auth().createUserWithEmailAndPassword(email, pass)
+            .then((userCredential) => {
+                return userCredential.user.updateProfile({ displayName: name });
+            })
+            .then(() => {
+                alert('Conta de administrador criada na nuvem com sucesso! Faça o login.');
+                toggleAuthView(true);
+            })
+            .catch((error) => {
+                console.error("Erro ao registrar: ", error);
+                alert('Erro ao criar conta: ' + error.message);
+            });
         }
 
         function handleLogin(e) {
             e.preventDefault();
-            const user = document.getElementById('login-user').value.toLowerCase();
+            const email = document.getElementById('login-user').value.trim();
             const pass = document.getElementById('login-pass').value;
 
-            const conta = usuarios.find(u => u.user === user && u.pass === pass);
-            if(user === 'admin' && pass === 'admin') { 
-                usuarioLogado = { name: "Administrador", user: "admin" };
-            } else if (!conta) {
-                return alert('Usuário ou senha incorretos.');
-            } else {
-                usuarioLogado = conta;
-            }
-
-            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-            atualizarMenuAuth();
-            closeModal('modal-auth');
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                usuarioLogado = { name: user.displayName || user.email, user: user.email };
+                localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+                atualizarMenuAuth();
+                closeModal('modal-auth');
+            })
+            .catch((error) => {
+                console.error("Erro ao logar: ", error);
+                alert('Usuário ou senha incorretos na nuvem do Firebase.');
+            });
         }
 
         function fazerLogout() {
-            usuarioLogado = null;
-            localStorage.removeItem('usuarioLogado');
-            atualizarMenuAuth();
+            firebase.auth().signOut().then(() => {
+                usuarioLogado = null;
+                localStorage.removeItem('usuarioLogado');
+                atualizarMenuAuth();
+            });
         }
 
         function atualizarMenuAuth() {
@@ -593,10 +651,9 @@
         }
 
         // ======================================================
-        // SISTEMA REAL DO FIREBASE FIRESTORE
+        // SISTEMA REAL DO FIREBASE FIRESTORE (ARTIGOS)
         // ======================================================
 
-        // SALVAR NO BANCO DE DADOS DA NUVEM
         function handlePublish(e) {
             e.preventDefault();
             const titulo = document.getElementById('pub-title').value;
@@ -605,7 +662,6 @@
 
             const padraoImg = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80";
 
-            // Enviando objeto completo para o Cloud Firestore
             db.collection("artigos").add({
                 titulo: titulo,
                 categoria: categoria,
@@ -617,15 +673,11 @@
             })
             .then(() => {
                 alert("Artigo publicado com sucesso na nuvem do Firebase!");
-                
-                // Limpar os campos do formulário
                 document.getElementById('pub-title').value = "";
                 document.getElementById('pub-text').value = "";
                 imagemCarregadaBase64 = null;
                 removePdf();
                 closeModal('modal-publish');
-                
-                // Recarregar os dados atualizados
                 carregarArtigosDaNuvem();
             })
             .catch((error) => {
@@ -634,7 +686,6 @@
             });
         }
 
-        // CARREGAR E RENDERIZAR OS ARTIGOS DA NUVEM
         function carregarArtigosDaNuvem() {
             db.collection("artigos").orderBy("dataCriacao", "desc").get()
             .then((querySnapshot) => {
@@ -649,14 +700,11 @@
 
                 querySnapshot.forEach((doc) => {
                     const art = doc.data();
-                    // Guardamos o ID gerado pelo Firebase no objeto
                     art.id = doc.id; 
                     listaArtigosAtual.push(art);
 
-                    // Criação visual do card idêntico ao seu layout original
                     const card = document.createElement('article');
                     card.className = 'card';
-                    // Evento de clique para poder abrir o artigo de verdade!
                     card.onclick = () => abrirArtigoCompleto(art.id);
                     
                     card.innerHTML = `
@@ -677,7 +725,6 @@
             });
         }
 
-        // FUNÇÃO PARA ABRIR E LER OS ARTIGOS DE VERDADE
         function abrirArtigoCompleto(id) {
             const artigo = listaArtigosAtual.find(a => a.id === id);
             if(!artigo) return;
@@ -705,7 +752,6 @@
             openModal('modal-read');
         }
 
-        // SISTEMA DE BUSCA FILTRADA (Com dados da nuvem)
         function filtrarArtigos() {
             const termo = document.getElementById('search-input').value.toLowerCase();
             const feed = document.getElementById('articles-feed');
@@ -740,11 +786,23 @@
             });
         }
 
-        // Execuções automáticas ao abrir o site
+        // Execuções automáticas e monitoramento do estado de login real
         window.onload = function() {
-            atualizarMenuAuth();
+            // Monitora em tempo real se há um usuário ativo no Firebase
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    usuarioLogado = { name: user.displayName || user.email, user: user.email };
+                    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+                } else {
+                    usuarioLogado = null;
+                    localStorage.removeItem('usuarioLogado');
+                }
+                atualizarMenuAuth();
+            });
+            
             carregarArtigosDaNuvem();
         };
     </script>
 </body>
 </html>
+
