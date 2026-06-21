@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mundo Tech - Portal Interativo</title>
+    
+    <!-- ANÚNCIO POPUNDER / SOCIAL BAR (ADSTERRA) -->
+    <script src="https://pl29832138.effectivecpmnetwork.com/46/0d/e1/460de1f0a96d267de4ef4c301252cd9e.js"></script>
     
     <!-- ÍCONES OFICIAIS PARA O GOOGLE RECONHECER O FAVICON -->
     <link rel="icon" type="image/png" href="logo-tech.png" sizes="32x32">
@@ -126,6 +129,30 @@
             font-weight: bold;
             cursor: pointer;
             margin-left: 4px;
+        }
+
+        /* Estilização Geral para Zonas de Anúncios */
+        .zona-anuncio-global {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 25px auto;
+            padding: 10px;
+            max-width: 1200px;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .rotulo-anuncio {
+            display: block;
+            width: 100%;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Conteúdo Principal */
@@ -299,7 +326,7 @@
             text-decoration: underline;
         }
 
-        /* BARRA DE AVISO DE COOKIES (Exigência AdSense) */
+        /* BARRA DE AVISO DE COOKIES */
         .cookie-banner {
             position: fixed;
             bottom: 0; left: 0; width: 100%;
@@ -367,6 +394,21 @@
         </div>
     </header>
 
+    <!-- ZONA DE ANÚNCIO: BANNER DO TOPO (468x60) -->
+    <div class="zona-anuncio-global">
+        <span class="rotulo-anuncio">Publicidade</span>
+        <script>
+          atOptions = {
+            'key' : 'fcacd2285b7d1726afa52703db667b96',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 468,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/fcacd2285b7d1726afa52703db667b96/invoke.js"></script>
+    </div>
+
     <!-- Seção Principal -->
     <main class="container">
         <h3 class="section-title" id="feed-title">Todos os Artigos</h3>
@@ -374,6 +416,39 @@
             <!-- Artigos entram aqui dinamicamente -->
         </div>
     </main>
+
+    <!-- ZONA DE ANÚNCIO INTERMEDIÁRIA: BANNERS VERTICAIS (160x300 e 160x600 lado a lado como parceiros) -->
+    <div class="zona-anuncio-global" style="background-color: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+        <span class="rotulo-anuncio">Links Patrocinados</span>
+        
+        <!-- Vertical 160x300 -->
+        <div>
+            <script>
+              atOptions = {
+                'key' : '61037aac7dd4b23e977edb7f10bfba8c',
+                'format' : 'iframe',
+                'height' : 300,
+                'width' : 160,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/61037aac7dd4b23e977edb7f10bfba8c/invoke.js"></script>
+        </div>
+
+        <!-- Vertical 160x600 -->
+        <div>
+            <script>
+              atOptions = {
+                'key' : '0aa051b58091f9ec3ed643d45258a8fa',
+                'format' : 'iframe',
+                'height' : 600,
+                'width' : 160,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/0aa051b58091f9ec3ed643d45258a8fa/invoke.js"></script>
+        </div>
+    </div>
 
     <!-- BARRA DE COOKIES -->
     <div id="cookie-box" class="cookie-banner" style="display: none;">
@@ -390,6 +465,22 @@
             <h2 id="view-title" style="margin: 10px 0; color:#0f172a;"></h2>
             <p id="view-author" class="card-author" style="margin-bottom:20px;"></p>
             <div id="view-text" style="color:#334155; font-size:1.1rem; white-space:pre-wrap; line-height:1.8; margin-bottom:20px;"></div>
+            
+            <!-- ZONA DE ANÚNCIO: QUADRADO 300x250 DENTRO DA LEITURA DO ARTIGO -->
+            <div class="zona-anuncio-global" style="border-top: 1px solid #e2e8f0; margin-top: 20px; padding-top: 15px;">
+                <span class="rotulo-anuncio">Recomendado para Você</span>
+                <script>
+                  atOptions = {
+                    'key' : 'b2e9ef9fecb8c02ad2fef0c719948f21',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://www.highperformanceformat.com/b2e9ef9fecb8c02ad2fef0c719948f21/invoke.js"></script>
+            </div>
+
             <div id="view-pdf-area"></div>
         </div>
     </div>
@@ -472,7 +563,7 @@
             <div style="color: #334155; font-size: 0.95rem; text-align: left;">
                 <p><strong>1. Aceitação dos Termos:</strong> Ao aceder ao site Mundo Tech, você concorda de forma integral com estes termos de serviço e diretrizes legais.</p><br>
                 <p><strong>2. Uso do Conteúdo:</strong> Todo o material informativo publicado no portal visa a partilha de conhecimento sobre tecnologia. É estritamente proibida a reprodução para fins lucrativos sem atribuição de créditos.</p><br>
-                <p><strong>3. Responsabilidade do Usuário:</strong> O utilizador compromete-se a efetuar publicações legítimas dentro da plataforma, respeitando as leis comunitárias de direitos de autor.</p>
+                <p><strong>3. Responsabilidade do Usuário:</strong> O utilizador compromete-se a efetuar publicações legítimas dentro da plataforma, respecting as leis comunitárias de direitos de autor.</p>
             </div>
         </div>
     </div>
@@ -485,7 +576,7 @@
             <div style="color: #334155; font-size: 0.95rem; text-align: left;">
                 <p>A sua privacidade é de suma importância para a administração do Mundo Tech. Coletamos e processamos dados de registo seguindo elevados padrões de proteção.</p><br>
                 <p><strong>1. Coleta de Informação:</strong> Armazenamos apenas o nome e e-mail informados voluntariamente na criação de conta para validação de segurança no Firebase.</p><br>
-                <p><strong>2. Anúncios de Terceiros:</strong> Este portal está preparado para operar com sistemas de publicidade (como o Google AdSense), que usam cookies analíticos para entregar anúncios relevantes baseados nas suas visitas anteriores.</p>
+                <p><strong>2. Anúncios de Terceiros:</strong> Este portal está preparado para operar com sistemas de publicidade (como o Adsterra), que usam cookies analíticos para entregar anúncios relevantes baseados nas suas visitas anteriores.</p>
             </div>
         </div>
     </div>
@@ -511,6 +602,13 @@
                 <button type="submit" class="btn-submit" style="background: #38bdf8;">Enviar Mensagem</button>
             </form>
         </div>
+    </div>
+
+    <!-- ZONA DE ANÚNCIO: BANNER PREMIUM NATIVO ACIMA DO RODAPÉ (CONTAINER 8828...) -->
+    <div class="zona-anuncio-global">
+        <span class="rotulo-anuncio">Publicidade Recomendada</span>
+        <script async="async" data-cfasync="false" src="https://pl29832139.effectivecpmnetwork.com/8828a7030100c72d4b5677f97a9ab4a7/invoke.js"></script>
+        <div id="container-8828a7030100c72d4b5677f97a9ab4a7"></div>
     </div>
 
     <!-- Rodapé -->
